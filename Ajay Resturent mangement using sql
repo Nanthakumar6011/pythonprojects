@@ -1,0 +1,78 @@
+import mysql.connector
+from tabulate import tabulate
+
+# Connect to the MySQL database
+con = mysql.connector.connect(host="localhost", user="root", password="root", database="nantha")
+
+# Insert function to add data to the table
+def insert(customer_id, customer_name, purchase, city):
+    res = con.cursor()
+    sql = "INSERT INTO resturent(customer_id, customer_name, purchase, city) VALUES(%s, %s, %s, %s)"
+    user = (customer_id, customer_name, purchase, city)
+    res.execute(sql, user)
+    con.commit()
+    print("Successfully inserted")
+    pass
+
+# Update function to modify existing data in the table
+def update(customer_id, customer_name, purchase, city):
+    res = con.cursor()
+    sql = "UPDATE resturent SET customer_name=%s, purchase=%s, city=%s WHERE customer_id=%s"
+    user = (customer_name, purchase, city, customer_id)  # customer_id should be last in the query
+    res.execute(sql, user)
+    con.commit()
+    print("Successfully updated..")
+    pass
+
+# Select function to retrieve and display data from the table
+def select():
+    res = con.cursor()
+    sql = "SELECT customer_id, customer_name, purchase, city FROM resturent"
+    res.execute(sql)
+    result = res.fetchall()
+    print(tabulate(result, headers=["customer_id", "customer_name", "purchase", "city"]))
+    pass
+
+# Delete function to remove data from the table
+def delete(customer_id):
+    res = con.cursor()
+    sql = "DELETE FROM resturent WHERE customer_id=%s"
+    user = (customer_id,)
+    res.execute(sql, user)
+    con.commit()
+    print("Successfully deleted")
+    pass
+
+# Main loop for user interaction
+while True:
+    print("1. Insert the data" '\n' "2. Update the data" '\n' "3. Select the data" '\n' "4. Delete the data" '\n' "5. Exit")
+
+    choice = int(input("Enter your choice: "))
+
+    if choice == 1:
+        customer_id = int(input("Enter the customer ID: "))
+        customer_name = input("Enter the customer name: ")
+        purchase = int(input("Enter the purchase amount: "))
+        city = input("Enter the city name: ")
+        insert(customer_id, customer_name, purchase, city)
+
+    elif choice == 2:
+        customer_id = int(input("Enter the customer ID: "))
+        customer_name = input("Enter the customer name: ")
+        purchase = int(input("Enter the purchase amount: "))
+        city = input("Enter the city name: ")
+        update(customer_id, customer_name, purchase, city)
+
+    elif choice == 3:
+        select()
+
+    elif choice == 4:
+        customer_id = int(input("Enter the customer ID to delete: "))
+        delete(customer_id)
+
+    elif choice == 5:
+        print("Exiting the program. Thank you!")
+        break
+
+    else:
+        print("Invalid option. Please try again.")
