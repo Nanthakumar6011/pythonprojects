@@ -1,0 +1,71 @@
+class Library:
+
+    def __init__(self, book_list):
+        self.booklist = book_list  # Complete list of all books
+        self.available_books = book_list.copy()  # List of books currently available for borrowing
+        self.book_lent = {}  # Dictionary to store lent books and the names of the people who borrowed them
+
+    def display_booklist(self):
+        print("\nList of all books:")
+        for book in self.booklist:
+            print(book)
+
+    def display_available_books(self):
+        print("\nAvailable books for borrowing:")
+        if not self.available_books:
+            print("No books are currently available.")
+        else:
+            for book in self.available_books:
+                print(book)
+
+    def lend_book(self, book, name):
+        if book not in self.booklist:
+            print("Incorrect book name. Please check the book list.")
+        elif book in self.book_lent:
+            print(f"The book '{book}' is already taken by {self.book_lent[book]}.")
+        else:
+            self.book_lent[book] = name
+            self.available_books.remove(book)
+            print(f"Book '{book}' has been lent to {name}.")
+
+    def return_book(self, book):
+        if book in self.book_lent:
+            self.available_books.append(book)
+            del self.book_lent[book]
+            print(f"Book '{book}' has been returned.")
+        else:
+            print(f"The book '{book}' was not lent out.")
+
+if __name__ == '__main__':
+    lib = Library(['The Life Divine', 'Da Vinci Code', 'The Alchemist', 'Mahabharata', 'Ramayana'])
+    print("************* Welcome to the Library **************")
+
+    while True:
+        print('\n1. Display available books'
+              '\n2. Display all books'
+              '\n3. Borrow a book'
+              '\n4. Return a book'
+              '\n5. Quit')
+        user = int(input("\nEnter the choice to select your option: "))
+
+        if user == 1:
+            lib.display_available_books()
+
+        elif user == 2:
+            lib.display_booklist()
+
+        elif user == 3:
+            name = input("Enter your name: ")
+            book = input("Enter the book name: ")
+            lib.lend_book(book, name)
+
+        elif user == 4:
+            book = input("Enter the name of the book to return: ")
+            lib.return_book(book)
+
+        elif user == 5:
+            print("Thank you for using the library!")
+            break
+
+        else:
+            print("Please enter a valid option.")
