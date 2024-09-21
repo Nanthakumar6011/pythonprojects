@@ -1,0 +1,170 @@
+import  random
+
+tax=17.5
+
+
+
+def getotp():
+    a=random.randint(1000,9989)
+    return a
+
+
+def mutton_half():
+    totalamount=amount+tax
+    if amount==240:
+        print("kindlly collect your order")
+        print(f"your bill is {amount} and tax is {tax} ,so total is {totalamount}")
+        payment()
+        print("thank you")
+
+    else:
+        print("pls enter correct amount")
+def mutton_full():
+    totalamount=amount+tax
+    if amount==370:
+        print("kindlly collect your order")
+        print(f"your bill is {amount} and tax is {tax} ,so total is {totalamount}")
+        payment()
+        print("thank you")
+    else:
+        print("pls enter correct amount")
+
+
+
+def chicken():
+    totalamount=amount+tax
+    if amount==300:
+        print("kindlly collect your order")
+        print(f"your bill is {amount} and tax is {tax} ,so total is {totalamount}")
+        payment()
+        print("thank you")
+    else:
+        print("pls enter correct amount")
+
+
+def meals():
+    if amount==375:
+        totalamount=amount+tax
+        print("kindlly collect your order")
+        print(f"your bill is {amount} and tax is {tax} ,so total is {totalamount}")
+        payment()
+        print("thank you")
+    else:
+        print("pls enter correct amount")
+    pass
+
+def chinesh():
+    if amount==470:
+        totalamount=amount+tax
+        print("kindlly collect your order")
+        print(f"your bill is {amount} and tax is {tax} ,so total is {totalamount}")
+        payment()
+        print("thank you")
+    else:
+        print("pls enter correct amount")
+    pass
+
+def payment():
+
+
+    os=getotp()
+    print("your payment otp is:",os)
+    ot = int(input("*******enter the otp for payment security*******"))
+    print("Payment Options"'\n''1.Google Pay''\n''2.Phonephe''\n''3.Paytym')
+    if ot==os:
+        pp = int(input("enter your payment option"))
+        if pp == 1:
+            print("open your google pay scanner and scan it")
+        elif pp == 2:
+            print("open your phonephe scanner")
+
+        elif pp == 3:
+            print("open your paytym and scan it")
+
+        else:
+            print("enter the correct otions")
+
+
+    else:
+        print("enter correct otp")
+
+
+
+
+print("welcome sir/madam.....**")
+print("******************************")
+
+otp=getotp()
+print(f'your otp is {otp} kindly enter it ')
+
+
+user=int(input("**enter your  otp  here ** :"))
+vvgroup=True
+
+while vvgroup:
+    if otp == user:
+        print("********welcome to A2b hotel ********")
+        print("please select the menu options")
+        print("1.mutton biriyani"'\n''2.chiken biriyani''\n''3.meals''\n''4.Chinesh''\n''5.Exit')
+        item = input("Enter your food number")
+        if item == '1':
+            print("***Your mutton biriyani is Ready****")
+            print("1.half plate is: 240 rs"'\n'"2.fullplate is :370 rs")
+            choice=input("enter the choice")
+
+
+            if choice=='1':
+                print("your bill amount is 240 rs")
+                amount=int(input("enter your bill amount"))
+
+                mutton_half()
+            elif choice=='2':
+
+                    print("your bill amount is 370 rs")
+                    amount = int(input("enter your bill amount"))
+                    mutton_full()
+                # else:
+                #     print("please select correct options")
+
+
+
+        elif item == '2':
+            print("your chicken biriyani")
+            print("your chicken biriyani is 300")
+            amount=int(input("enter the amount of bill :"))
+            # if amount!=300:
+            #     print("wromg amount")
+            chicken()
+
+        elif item == '3':
+            print("your Andhra Meals")
+            print("your Andhra meals is 375")
+            amount = int(input("enter the amount of bill :"))
+            # if amount!=300:
+            #     print("wrong amount")
+            meals()
+
+        elif item == '4':
+            print("your chines food is Ready")
+            print("your chines food is 470")
+            amount = int(input("enter the amount of bill :"))
+            # if amount != 470:
+            #     print("wrong amount")
+            meals()
+            chinesh()
+
+        elif item == '5':
+            print("****thank u for visiting our app****")
+            print("****All Ways Welcome A2B******")
+
+            break
+
+        else:
+
+             print("**try to select correct options**")
+
+
+
+    else:
+        print("Oru Otp ya pathu podaa therla neeyelam order panna vanthuta")
+        vvgroup=False
