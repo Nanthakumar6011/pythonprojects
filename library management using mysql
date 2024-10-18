@@ -1,0 +1,121 @@
+import mysql.connector
+
+class Library:
+    def __init__(self):
+
+        self.conn = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='root',
+            database='nantha'
+        )
+        self.cursor = self.conn.cursor()
+
+    def add_user(self, name):
+        query = "INSERT INTO users (name) VALUES (%s)"
+        self.cursor.execute(query, (name,))
+        self.conn.commit()
+        print(f"User '{name}' added successfully!")
+
+
+    def add_book(self, title):
+        query = "INSERT INTO books (title) VALUES (%s)"
+        self.cursor.execute(query, (title,))
+        self.conn.commit()
+        print(f"Book '{title}' added successfully!")
+
+
+    def display_available_books(self):
+        query = "SELECT * FROM books WHERE is_lent = 0"
+        self.cursor.execute(query)
+        books = self.cursor.fetchall()
+        if books:
+            print("Available books:")
+            for book in books:
+                print(f"Book ID: {book[0]}, Title: {book[1]}")
+        else:
+            print("No books are currently available.")
+
+
+    def display_all_books(self):
+        query = "SELECT * FROM books"
+        self.cursor.execute(query)
+        books = self.cursor.fetchall()
+        print("All books in the library:")
+        for book in books:
+            status = "Available" if book[2] == 0 else f"Lent to User ID: {book[3]}"
+            print(f"Book ID: {book[0]}, Title: {book[1]}, Status: {status}")
+
+
+    def lend_book(self, book_id, user_id):
+
+        query = "SELECT * FROM books WHERE book_id = %s AND is_lent = 0"
+        self.cursor.execute(query, (book_id,))
+        book = self.cursor.fetchone()
+
+        if book:
+
+            update_query = "UPDATE books SET is_lent = 1, lent_to = %s WHERE book_id = %s"
+            self.cursor.execute(update_query, (user_id, book_id))
+            self.conn.commit()
+            print(f"Book ID: {book_id} lent to User ID: {user_id}")
+        else:
+            print("Book is either already lent or does not exist.")
+
+
+    def return_book(self, book_id):
+
+        query = "SELECT * FROM books WHERE book_id = %s AND is_lent = 1"
+        self.cursor.execute(query, (book_id,))
+        book = self.cursor.fetchone()
+
+        if book:
+
+            update_query = "UPDATE books SET is_lent = 0, lent_to = NULL WHERE book_id = %s"
+            self.cursor.execute(update_query, (book_id,))
+            self.conn.commit()
+            print(f"Book ID: {book_id} has been returned.")
+        else:
+            print("Book is either already available or does not exist.")
+
+
+    def close_connection(self):
+        self.conn.close()
+
+if __name__ == '__main__':
+    library = Library()
+
+    while True:
+        print("\n1. Add User\n2. Add Book\n3. Display Available Books\n4. Display All Books\n5. Lend Book\n6. Return Book\n7. Quit")
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            name = input("Enter the user name: ")
+            library.add_user(name)
+
+        elif choice == 2:
+            title = input("Enter the book title: ")
+            library.add_book(title)
+
+        elif choice == 3:
+            library.display_available_books()
+
+        elif choice == 4:
+            library.display_all_books()
+
+        elif choice == 5:
+            book_id = int(input("Enter the Book ID: "))
+            user_id = int(input("Enter the User ID: "))
+            library.lend_book(book_id, user_id)
+
+        elif choice == 6:
+            book_id = int(input("Enter the Book ID to return: "))
+            library.return_book(book_id)
+
+        elif choice == 7:
+            library.close_connection()
+            print("Exiting the system. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice, please try again.")
