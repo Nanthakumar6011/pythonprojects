@@ -1,0 +1,151 @@
+import  random
+import  mysql.connector
+
+mydb=mysql.connector.connect(host="localhost",user="root",password="root",database="nantha")
+
+a=mydb.cursor()
+def bank_otp():
+    abd=random.randint(1000,9999)
+    return abd
+otp=bank_otp()
+
+def deposite(amt, id):
+    # Ensure amt is a number
+    amt = int(amt)  # or int(amt) depending on your use case
+
+    # Fetch the current amount
+    mm = "SELECT amt FROM bank WHERE cust_id=%s"
+    v = (id,)  # Ensure the tuple is correctly formed
+    a.execute(mm, v)
+
+    result = a.fetchone()
+
+    if result:
+        print(result[0])
+        current_amt = result[0]  # Fetch the current amount
+        total = current_amt + amt  # Calculate the new total
+
+        # Update the amount in the bank
+        spb = "UPDATE bank SET amt=%s WHERE cust_id=%s"
+        user = (total, id)  # Update with the new total amount
+        a.execute(spb, user)
+        mydb.commit()
+        print('*'*25)
+        print(f'Successfully deposited Rupees: {total}')
+        print('*'*25)
+    else:
+        print("Customer not found.")
+
+
+def withdrawal(wamt, id):
+    # Convert wamt to a number (float or int as per your use case)
+    wamt = float(wamt)
+
+    # Query to fetch the current balance
+    mm = "SELECT amt FROM bank WHERE cust_id=%s"
+    v = (id,)
+    a.execute(mm, v)
+
+    res = a.fetchone()
+
+    if res:
+        sub_amt = res[0]  # -------> Current amount in the bank
+        if sub_amt > 0 and sub_amt >= wamt:  # --->Check if sufficient balance to indicate the customer
+            with_amt = sub_amt - wamt  #----> Calculate remaining amount in your account
+
+            # Update the balance in the bank
+            qur = "UPDATE bank SET amt=%s WHERE cust_id=%s"
+            g = (with_amt, id)
+            a.execute(qur, g)
+            mydb.commit()
+
+            print(f"Successfully withdrawn {wamt} from your account.")
+        else:
+            print("Insufficient balance.")
+    else:
+        print("Customer not found.")
+
+
+def balance(id,op):
+    if op==otp:
+        mm="SELECT AMT FROM BANK WHERE CUST_ID=%s"
+        v=(id,)
+        a.execute(mm,v)
+        bb=a.fetchone()
+        print(f'your current bank balance is  Rupees {bb[0]}')
+        print('*'*40)
+def adding_customer(cust_id,cname,amt4):
+
+    sql = "insert into bank (cust_id,cname,amt) values (%s,%s,%s)"
+    user = (cust_id,cname,amt)
+    a.execute(sql, user)
+    mydb.commit()
+    print("data added sucessfully")
+def updating_customer(id):
+    cname = input("Enter the new customer name: ")
+    amt = float(input("Enter the new amount: "))  # Ensure to take the amount as float or int
+    spb = "UPDATE bank SET cname=%s, amt=%s WHERE cust_id=%s"
+    user = (cname, amt, id)  # Ensure all necessary parameters are included
+    a.execute(spb, user)
+    mydb.commit()
+    print("Updated successfully")
+
+def delete_cust(id):
+
+    spb = "delete from bank where cust_id=%s"
+    user = (id,)
+    a.execute(spb, user)
+    mydb.commit()
+    print("data delete sucessfully...")
+
+
+whl=True
+while whl:
+
+    print("welcome to sbi bank ")
+    print("namasthae")
+    print('*' * 50)
+    print("select the option given below")
+    print("1.deposite"'\n''2.withdrawal''\n''3.balance check''\n''4.Adding the customer ''\n''5.update the bank customer''\n''6.delete the customer''\n''7.exit')
+
+    ch = int(input("enter the choice 1 to 7 : "))
+    if ch == 1:
+        print("your selecting the deposite option")
+        id = (input("enter the customer id : "))
+        amt = (input("enter the deposite amount: "))
+        deposite(amt, id)
+
+    elif ch == 2:
+        print("your selecting the withdrawal option")
+        wamt = int(input("enter the withdraw  amount :"))
+        id=int(input("enter the customer id :"))
+        withdrawal(wamt,id)
+
+    elif ch == 3:
+        print("your selecting the check balance option")
+        phno=int(input("enter the  your phone number +91 :"))
+        print(f'your bank otp is  {otp} ')
+        op = int(input("enter the opt here : "))
+        id = int(input("enter the customer pin : "))
+        balance(id, op)
+
+    elif ch==4:
+        cust_id=int(input("enter the customer id 5 to ~ :"))
+        cname=input("enter the customer name")
+        amt=0
+        adding_customer(cust_id,cname,amt)
+
+    elif ch==5:
+        id=int(input("enter the  customer id :"))
+        updating_customer(id)
+    elif ch==6:
+        id=int(input("enter the  customer id :"))
+        delete_cust(id)
+
+
+    elif ch==7:
+        print("************thankyou for using sbi bank***************")
+        whl=False
+        break
+
+
